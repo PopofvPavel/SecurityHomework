@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -36,7 +39,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-  /*  @Override
+
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/secured/**").hasAnyRole("ADMIN", "MODERATOR")
+                .antMatchers("/secured/moder").hasAnyRole("MODERATOR")
+                .anyRequest().permitAll()
+                .and()
+                .formLogin()
+                //.loginPage("/login")
+                .loginProcessingUrl("/authenticateTheUser")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/403"); // Обработка ошибок доступа
+    }
+
+
+     /*  @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         User.UserBuilder users = User.withDefaultPasswordEncoder();
         auth.inMemoryAuthentication()
@@ -56,30 +88,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              .permitAll();
     }*/
 
-    @Override
-    @Bean // Этот бин позволяет внедрять AuthenticationManager в другие компоненты
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+/*    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/secured/**").hasAnyRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .formLogin()
-                //.loginPage("/login")
-                .loginProcessingUrl("/authenticateTheUser")
-                .permitAll()
-                .and()
-                .httpBasic() // Включаем Basic аутентификацию
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/403"); // Обработка ошибок доступа
-    }
+
+        return new InMemoryUserDetailsManager(user,);
+    }*/
 }
