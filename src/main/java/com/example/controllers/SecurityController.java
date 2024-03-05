@@ -20,8 +20,11 @@ public class SecurityController {
 
     @GetMapping("/moder")
     @PreAuthorize("hasRole('MODERATOR')")
-    public String showModerPage(){
+    public String showModerPage() {
 
         return "moder-page";
     }
+
+
+
 }
