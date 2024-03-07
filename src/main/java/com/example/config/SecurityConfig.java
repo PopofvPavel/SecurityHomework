@@ -29,16 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.dataSource = dataSource;
     }
 
-/*
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
-                .authoritiesByUsernameQuery("SELECT username, role_name FROM users INNER JOIN roles ON users.id = roles.user_id WHERE username=?")
-                .passwordEncoder(NoOpPasswordEncoder.getInstance());
-    }
-*/
 
 
 
@@ -57,7 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic()
-
                 //.formLogin()
                 //.loginProcessingUrl("/authenticateTheUser")
                 //.permitAll()
@@ -71,25 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-     /*  @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
-        auth.inMemoryAuthentication()
-                .withUser(users.username("user1").password("pass1").roles("USER", "ADMIN"))
-                .withUser(users.username("user2").password("pass2").roles("USER"));
-    }
-*/
- /*   @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().permitAll()
-                .antMatchers("/secured/**").hasAnyRole("ADMIN")
-                .and()
-                .formLogin()
-               .loginPage("/login")
-               .loginProcessingUrl("/authenticateTheUser")
-             .permitAll();
-    }*/
 
     @Bean
     public UserDetailsService userDetailsService() {
