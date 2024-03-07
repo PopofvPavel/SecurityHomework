@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.dataSource = dataSource;
     }
 
+/*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
@@ -37,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("SELECT username, role_name FROM users INNER JOIN roles ON users.id = roles.user_id WHERE username=?")
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
+*/
 
 
 
@@ -54,10 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/secured/**").hasAnyRole("ADMIN", "MODERATOR")
                 .anyRequest().permitAll()
                 .and()
-                .formLogin()
-                //.loginPage("/login")
-                .loginProcessingUrl("/authenticateTheUser")
-                .permitAll()
+                .httpBasic()
+
+                //.formLogin()
+                //.loginProcessingUrl("/authenticateTheUser")
+                //.permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -88,15 +91,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              .permitAll();
     }*/
 
-/*    @Bean
+    @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
+                .username("user1")
+                .password("password1")
+                .roles("USER", "ADMIN").build();
+
+
+        UserDetails moder = User.withDefaultPasswordEncoder()
+                .username("moder")
+                .password("moder")
+                .roles("MODERATOR")
                 .build();
 
-
-        return new InMemoryUserDetailsManager(user,);
-    }*/
+        return new InMemoryUserDetailsManager(user,moder);
+    }
 }
